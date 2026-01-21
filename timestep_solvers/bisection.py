@@ -1,32 +1,38 @@
 from math import *
-import numpy as np
+import matplotlib.pyplot as plt
+import math
 
-def bisection(f, a, b, zero_tol=1e-8, max_iters=100):
+from helper_functions import *
+
+def truncated_bisection(f, a, b, dps=16, zero_tol=1e-8, max_iters=100):
     """
-    Find a root of f(x) in the interval [a,b] using the bisection method.
+    Find a root of f(x) in the interval [a,b] using bisection method.
     Requires [a,b] contains exactly one root that passes through the x-intersection
     """
 
-    fa = f(a)
-    fb = f(b)
+    fa = truncate(f(a), dps) 
+    fb = truncate(f(b), dps)
 
-    if fa * fb > 0:
-        raise ValueError("f(a) and f(b) must have opposite signs")
+    x_list = []
 
     # solve for the root
     for n in range(0, max_iters):
-        mid = (a+b)/2
-        fmid = f(mid)
+        mid = truncate((a+b)/2, dps)
+        fmid = truncate(f(mid), dps)
+        
+        x_list.append(mid)
 
-        # quit if interval length is small enough
-        if abs((b-a)/2) < zero_tol:
-            return mid
+        if abs(fmid) < zero_tol:
+            print(n)
+            return mid, x_list
 
         if fmid*fa < 0:
             b = mid
-            fb = f(b)
+            fb = truncate(f(b), dps)
         elif fmid*fb < 0:
             a = mid
-            fa = f(a)
+            fa = truncate(f(a), dps)
     
-    return mid
+    print(mid)
+    print(x_list)
+    return mid, x_list

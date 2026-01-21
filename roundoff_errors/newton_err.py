@@ -17,7 +17,7 @@ f = lambda x: (cos(x) - x)
 f_prime = lambda x: -sin(x) - 1
 
 # initial guess
-x00 = 8
+x00 = 2
 
 # -----------
 # Setup plots

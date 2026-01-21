@@ -29,6 +29,11 @@ ax.set_title("Bisection Method Error Comparison")
 ax.invert_xaxis(); ax.legend()
 ax.grid(True, which="major", ls="--", alpha=0.5)
 
+# for linear regression
+x_list = np.array([])
+norm_y_list = np.array([])
+diff_y_list = np.array([])
+
 # -----------
 # Find errors
 # -----------
@@ -63,6 +68,10 @@ for N in range(N_iter):
         diff_err_list.append(diff_error)
         prev_zero = zero
 
+        # for lin regression
+        x_list.append(tol)
+        norm_y_list.append(norm_error)
+        diff_y_list.append(diff_error)
 
     # -----------
     # Plot errors
@@ -80,6 +89,10 @@ for N in range(N_iter):
     ax.loglog(tol_list, norm_plot, "-o", color="tab:blue", alpha=opacity)
     ax.loglog(tol_list, diff_plot, "-o", color="tab:orange", alpha=opacity)
 
+log_x = np.log10(x_list)
+log_norm_y = np.log10(norm_y_list)
+log_diff_y = []
+
 # pretend labels
 ax.loglog([0], [0], "-o", label=r"$|f(x_n)|$", color="tab:blue")
 ax.loglog([0], [0], "-o", label=r"$|x_n - x_{n-1}|$", color="tab:orange")
@@ -87,3 +100,18 @@ ax.legend()
 
 plt.tight_layout()
 plt.show()
+
+"""f = lambda x: x**2 - 2
+
+# guess interval that the root lies in
+a = 0
+b = 6
+
+zero, x_list = bisection(f, a, b)
+print(zero)
+error_plots(f, zero, x_list, math.sqrt(2))
+
+zero, x_list = truncated_bisection(f, a, b, 4)
+print(zero)
+error_plots(f, zero, x_list, math.sqrt(2))
+"""
