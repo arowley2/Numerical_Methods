@@ -2,6 +2,8 @@ from math import *
 import matplotlib.pyplot as plt
 import math
 
+from helper_functions import *
+
 def bisection(f, a, b, zero_tol=1e-8, max_iters=100):
     """
     Find a root of f(x) in the interval [a,b] using Newton's method.
@@ -35,26 +37,38 @@ def bisection(f, a, b, zero_tol=1e-8, max_iters=100):
     return mid, x_list
 
 
-def error_plots(f, a, b, zero_tol=1e-8, max_iters=100, actual=float('nan')):
+def truncated_bisection(f, a, b, dps=4, zero_tol=1e-8, max_iters=100):
+    """
+    Find a root of f(x) in the interval [a,b] using Newton's method.
+    Requires [a,b] contains exactly one root that passes through the x-intersection
+    """
 
-    zero, x_list = bisection(f, a, b, zero_tol, max_iters)
+    fa = truncate(f(a), dps) 
+    fb = truncate(f(b), dps)
 
-    abs_error = [abs(x - actual) for x in x_list]
+    x_list = []
 
-    adj_error = [abs(x_list[i-1] - x_list[i]) for i, _ in enumerate(x_list[:-1])]
+    # solve for the root
+    for n in range(0, max_iters):
+        mid = truncate((a+b)/2, dps)
+        fmid = truncate(f(mid), dps)
+        
+        x_list.append(mid)
 
-    res_error = [abs(f(x)) for x in x_list]
+        if abs(fmid) < zero_tol:
+            print(n)
+            return mid, x_list
 
-    plt.figure()
-    plt.semilogy(abs_error, "-o")
-    plt.semilogy(adj_error, "-*")
-    plt.semilogy(res_error, "-^")
-
-    plt.xlabel("Interations")
-    plt.ylabel("L2 Error")
-    plt.tight_layout()
-    plt.show()
-
+        if fmid*fa < 0:
+            b = mid
+            fb = truncate(f(b), dps)
+        elif fmid*fb < 0:
+            a = mid
+            fa = truncate(f(a), dps)
+    
+    print(mid)
+    print(x_list)
+    return mid, x_list
 
 
 # --------------------------
@@ -98,4 +112,10 @@ f = lambda x: x**2 - 2
 a = 0
 b = 6
 
-error_plots(f, a, b, 1e-8, 100, math.sqrt(2))
+zero, x_list = bisection(f, a, b)
+print(zero)
+error_plots(f, zero, x_list, math.sqrt(2))
+
+zero, x_list = truncated_bisection(f, a, b, 4)
+print(zero)
+error_plots(f, zero, x_list, math.sqrt(2))
