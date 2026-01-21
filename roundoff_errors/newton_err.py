@@ -17,7 +17,7 @@ f = lambda x: (cos(x) - x)
 f_prime = lambda x: -sin(x) - 1
 
 # initial guess
-x0 = 5
+x00 = 8
 
 # -----------
 # Setup plots
@@ -36,7 +36,7 @@ ax.grid(True, which="major", ls="--", alpha=0.5)
 for N in range(N_iter):
 
     # slightly perturbed initial guess
-    x0 += epsilon*rand.uniform(-1, 1)
+    x0 = x00 + epsilon*rand.uniform(-1, 1)
 
     # lists to check tolerance and errors
     tol_list = []

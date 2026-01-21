@@ -11,13 +11,13 @@ comparing solutions only a small perturbation away
 
 N_iter = 100
 opacity = 0.2
-epsilon = 1e-5
+epsilon = 1e-1
 
 f = lambda x: (cos(x) - x)
 
 # guess interval that the root lies in
-a = 0.2
-b = 1
+a0 = 0.2
+b0 = 1
 
 # -----------
 # Setup plots
@@ -37,7 +37,8 @@ for N in range(N_iter):
 
     # slightly perturbed initial interval
     rand_var = epsilon*rand.uniform(-1, 1)
-    a += rand_var ; b += rand_var
+    a = a0 + rand_var 
+    b = b0 + rand_var
 
     # lists to check tolerance and errors
     tol_list = []
